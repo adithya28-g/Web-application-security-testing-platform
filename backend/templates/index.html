@@ -2,19 +2,64 @@
 <html>
 <head>
     <title>Web Security Scanner</title>
+
+    <style>
+        body {
+            font-family: Arial;
+            background: #0f172a;
+            color: white;
+            text-align: center;
+            padding: 40px;
+        }
+
+        input {
+            padding: 10px;
+            width: 300px;
+            border-radius: 5px;
+            border: none;
+        }
+
+        button {
+            padding: 10px 20px;
+            margin: 10px;
+            background: #22c55e;
+            border: none;
+            border-radius: 5px;
+            color: white;
+            cursor: pointer;
+        }
+
+        pre {
+            margin-top: 20px;
+            background: black;
+            padding: 20px;
+            text-align: left;
+            overflow-x: auto;
+            max-height: 400px;
+        }
+    </style>
 </head>
+
 <body>
 
-<h1>Web Application Security Testing Platform</h1>
+<h1>🔐 Web Application Security Testing Platform</h1>
 
-<input type="text" id="url" placeholder="Enter URL">
-<button onclick="scan()">Scan</button>
+<input type="text" id="url" placeholder="Enter target URL">
 
-<pre id="result"></pre>
+<br>
+
+<button onclick="scan()">Nikto Scan</button>
+<button onclick="nmapScan()">Nmap Scan</button>
+
+<pre id="result">Result will appear here...</pre>
 
 <script>
+
+// Nikto scan
 async function scan() {
     let url = document.getElementById("url").value;
+
+    document.getElementById("result").innerText = "Running Nikto scan... ⏳";
 
     let res = await fetch('/scan', {
         method: 'POST',
@@ -23,8 +68,28 @@ async function scan() {
     });
 
     let data = await res.json();
+
     document.getElementById("result").innerText = data.nikto_result;
 }
+
+
+// Nmap scan
+async function nmapScan() {
+    let url = document.getElementById("url").value;
+
+    document.getElementById("result").innerText = "Running Nmap scan... ⏳";
+
+    let res = await fetch('/nmap_scan', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({url: url})
+    });
+
+    let data = await res.json();
+
+    document.getElementById("result").innerText = data.result;
+}
+
 </script>
 
 </body>
